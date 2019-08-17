@@ -1,0 +1,363 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito|Pacifico&display=swap');
+
+
+body {
+  padding: 0;
+  margin: 0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  min-height: calc(100vh - 1px);
+  display: flex;
+  flex-flow: column nowrap;
+
+  background-color: rgba(209,209,246,1);
+  background-image:
+    linear-gradient(90deg, 
+      rgba(230,230,250,0.5) 0%,
+      rgba(230,230,250,0.5) 10%,
+      rgba(230,230,250,0) 10%,
+      rgba(230,230,250,0) 20%,
+      rgba(230,230,250,0.5) 20%,
+      rgba(230,230,250,0.5) 30%,
+      rgba(230,230,250,0) 30%,
+      rgba(230,230,250,0) 40%,
+      rgba(230,230,250,0.5) 40%,
+      rgba(230,230,250,0.5) 50%,
+      rgba(230,230,250,0) 50%,
+      rgba(230,230,250,0) 60%,
+      rgba(230,230,250,0.5) 60%,
+      rgba(230,230,250,0.5) 70%,
+      rgba(230,230,250,0) 70%,
+      rgba(230,230,250,0) 80%,
+      rgba(230,230,250,0.5) 80%,
+      rgba(230,230,250,0.5) 90%,
+      rgba(230,230,250,0) 90%,
+      rgba(230,230,250,0) 100%
+    ),
+    linear-gradient(0, 
+      rgba(230,230,250,0.5) 0%,
+      rgba(230,230,250,0.5) 10%,
+      rgba(230,230,250,0) 10%,
+      rgba(230,230,250,0) 20%,
+      rgba(230,230,250,0.5) 20%,
+      rgba(230,230,250,0.5) 30%,
+      rgba(230,230,250,0) 30%,
+      rgba(230,230,250,0) 40%,
+      rgba(230,230,250,0.5) 40%,
+      rgba(230,230,250,0.5) 50%,
+      rgba(230,230,250,0) 50%,
+      rgba(230,230,250,0) 60%,
+      rgba(230,230,250,0.5) 60%,
+      rgba(230,230,250,0.5) 70%,
+      rgba(230,230,250,0) 70%,
+      rgba(230,230,250,0) 80%,
+      rgba(230,230,250,0.5) 80%,
+      rgba(230,230,250,0.5) 90%,
+      rgba(230,230,250,0) 90%,
+      rgba(230,230,250,0) 100%
+    );
+  background-size: 10em 10em;
+	background-position: 50% 50%;
+}
+
+.header--border {
+  height: 100px;
+  background-image: url('/images/clouds_and_logo.png');
+  background-size: cover;
+  flex-shrink: 0;
+}
+
+.footer--border {
+  height: 100px;
+  background-image: url('/images/clouds_and_logo.png');
+  background-size: cover;
+  background-position: center bottom;
+  flex-shrink: 0;
+}
+
+.content {
+  padding: 10px 50px;
+  flex: 1 0 auto;
+}
+
+a {
+  color: #9898AC;
+  font-weight: 900;
+}
+
+
+
+
+
+/* to organize */
+
+.sign {
+  margin: auto;
+  margin-top: 100px;
+  position: relative;
+  width: 500px;
+}
+
+.sign--rope {
+  border: 5px solid #d54647;
+  border-width: 5px 5px 0 0;
+  height: 210px;
+  width: 210px;
+  transform: rotate(-45deg);
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: -125px;
+  z-index: -5;
+  position: relative;
+  border-radius: 5px;
+}
+.sign--peg {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  top: -83px;
+  left: 50%;
+  margin-left: -25px;
+  background: url('https://secure.webtoolhub.com/static/resources/icons/set101/a9dbea2d.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.sign--ribbon {
+  width: 75px;
+  position: absolute;
+  filter: invert(44%) sepia(40%) saturate(1665%) hue-rotate(320deg) brightness(82%) contrast(105%);
+  margin-top: -20px;
+  z-index: 4;
+}
+.sign--ribbon__left {
+  margin-left: 50px;
+}
+.sign--ribbon__right {
+  margin-left: 312px;
+}
+
+.sign-center {
+  text-align: center;
+}
+.sign--border-container {
+  background-color: #f8d4de;
+  position: relative;
+  padding: 3px;
+  border: 7px solid white;
+  border-radius: 200px;
+  box-shadow: 2px 2px 10px 1px rgba(0,0,0,0.2);
+  display: inline-block;
+}
+.sign--border {
+  display: inline-block;
+  border: 20px solid rgba(0,0,0,0);
+  border-radius: 120px;
+  background: white;
+  position: relative;
+}
+.sign--body-wrapper {
+	height: 200px;
+  width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.5em;
+}
+
+.sign--body {
+  padding: 25px;
+  font-size: 0.75em;
+  z-index: 3;
+}
+
+.sign--body .p {
+  text-align: center;
+}
+
+.sign--background {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.sign--background__logo {
+  background-image: url('/images/logo.png');
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  z-index: 1;
+  background-size: contain;
+  background-repeat: no-repeat;
+  left: 50%;
+  margin-left: -80px;
+  top: 50%;
+  margin-top: -100px;
+  opacity: 0.6;
+}
+
+.sign--background__facet {
+  background: #f8d4de;
+  height: 50%;
+  width: 30px;
+  border-radius: 30px 30px 0 0;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -15px;
+  transform-origin: bottom center;
+}
+
+.sign--background-shadow {
+  margin-left: 7px;
+  margin-top: 5px;
+  z-index: 0;
+}
+.sign--background-shadow__facet {
+  background: #c8aeae;
+}
+
+.sign--background__facet-0
+{
+    transform: rotate(0deg);
+}
+.sign--background__facet-1
+{
+    transform: rotate(20deg) scaleY(1.05);
+}
+.sign--background__facet-2
+{
+    transform: rotate(36deg) scaleY(1.21);
+}
+.sign--background__facet-3
+{
+    transform: rotate(48deg) scaleY(1.43);
+}
+.sign--background__facet-4
+{
+    transform: rotate(57deg) scaleY(1.64);
+}
+.sign--background__facet-5
+{
+    transform: rotate(65deg) scaleY(1.80);
+}
+.sign--background__facet-6
+{
+    transform: rotate(73.5deg) scaleY(1.91);
+}
+.sign--background__facet-7
+{
+    transform: rotate(82deg) scaleY(1.96);
+}
+
+.sign--background__facet-8
+{
+    transform: rotate(90deg) scaleY(1.98);
+}
+.sign--background__facet-9
+{
+    transform: rotate(98deg) scaleY(1.96);
+}
+.sign--background__facet-10
+{
+    transform: rotate(106.5deg) scaleY(1.91);
+}
+.sign--background__facet-11
+{
+    transform: rotate(115deg) scaleY(1.80);
+}
+.sign--background__facet-12
+{
+    transform: rotate(123deg) scaleY(1.64);
+}
+.sign--background__facet-13
+{
+    transform: rotate(132deg) scaleY(1.43);
+}
+.sign--background__facet-14
+{
+    transform: rotate(144deg) scaleY(1.21);
+}
+.sign--background__facet-15
+{
+    transform: rotate(160deg) scaleY(1.05);
+}
+.sign--background__facet-16
+{
+    transform: rotate(180deg);
+}
+.sign--background__facet-17
+{
+    transform: rotate(200deg) scaleY(1.05);
+}
+.sign--background__facet-18
+{
+    transform: rotate(216deg) scaleY(1.21);
+}
+.sign--background__facet-19
+{
+    transform: rotate(228deg) scaleY(1.43);
+}
+.sign--background__facet-20
+{
+    transform: rotate(237deg) scaleY(1.64);
+}
+.sign--background__facet-21
+{
+    transform: rotate(245deg) scaleY(1.80);
+}
+.sign--background__facet-22
+{
+    transform: rotate(253.5deg) scaleY(1.91);
+}
+.sign--background__facet-23
+{
+    transform: rotate(262deg) scaleY(1.96);
+}
+
+.sign--background__facet-24
+{
+    transform: rotate(270deg) scaleY(1.98);
+}
+.sign--background__facet-25
+{
+    transform: rotate(278deg) scaleY(1.96);
+}
+.sign--background__facet-26
+{
+    transform: rotate(286.5deg) scaleY(1.91);
+}
+.sign--background__facet-27
+{
+    transform: rotate(295deg) scaleY(1.80);
+}
+.sign--background__facet-28
+{
+    transform: rotate(303deg) scaleY(1.64);
+}
+.sign--background__facet-29
+{
+    transform: rotate(312deg) scaleY(1.43);
+}
+.sign--background__facet-30
+{
+    transform: rotate(324deg) scaleY(1.21);
+}
+.sign--background__facet-31
+{
+    transform: rotate(340deg) scaleY(1.05);
+}
+
+
+
+.cursive {
+  font-family: 'Pacifico', cursive;
+}
+.big {
+  font-size: 1.5em;
+}
+

@@ -66,6 +66,19 @@ body {
   flex-shrink: 0;
 }
 
+.header--content {
+  padding: 0 10px;
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  height: 35px;
+  overflow: hidden;
+}
+
+.header--content:hover {
+  height: auto;
+}
+
 .footer--border {
   height: 100px;
   background-image: url('/images/clouds_and_logo.png');
@@ -361,3 +374,41 @@ a {
   font-size: 1.5em;
 }
 
+
+table {
+  background: white;
+  border-spacing: 15px;
+  width: 500px;
+  margin: auto;
+}
+
+table caption {
+  background: white;
+  text-align: left;
+  padding: 5px;
+}
+
+span.completedCards {
+  float: right;
+}
+
+span.cardName {
+  text-decoration: underline;
+}
+
+.stamp {
+  background: #f2d5d3;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  font-weight: bolder;
+  color: #8c7978;
+  box-shadow: 3px 3px 0px 1px #c4afae;
+}
+
+.stamped {
+  background-image: url('/images/logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}

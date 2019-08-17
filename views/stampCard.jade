@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  table
+    tr
+      caption 
+        span
+          span.cursive Name:
+          | 
+          span.cardName #{user}
+        span.completedCards
+          span.cursive Completed:
+          | 
+          span.cardName #{Math.floor(stamps / 20)}
+    each row in [0,1,2,3]
+      tr
+        each col in [0,1,2,3,4]
+          if (stamps % 20) > ((row * 5) + col)
+            td.stamp.stamped= (row * 5) + col + 1
+          else
+            td.stamp= (row * 5) + col + 1

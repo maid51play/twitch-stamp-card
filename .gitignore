@@ -57,5 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# oauth stuff
+oauth.js
+
 # next.js build output
 .next

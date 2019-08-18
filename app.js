@@ -15,6 +15,7 @@ var indexRouter = require('./routes/index')(app, passport);
 var authRouter = require('./routes/auth')(app, passport);
 var usersRouter = require('./routes/users');
 var hooksRouter = require('./routes/hooks');
+var apiRouter = require('./routes/api')(app, passport);
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
@@ -63,6 +64,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/hooks', hooksRouter);
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

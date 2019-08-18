@@ -33,27 +33,27 @@ module.exports = function(app, passport) {
       return url;
     })
     .then(url => res.send(200, url))
+  })
 
-    router.post('/stamps', ensureAuthenticated, function(req, res, next) {
-      // todo: get twitch user from headers
-      userId = 118128730;
+  router.post('/stamps', ensureAuthenticated, function(req, res, next) {
+    // todo: get twitch user from headers
+    userId = 118128730;
 
-      var createStamp = event => pool.query(
-        'INSERT INTO stamps ("twitchUserId","eventId") VALUES ($1,$2)',
-        [userId, event.id])
+    var createStamp = event => pool.query(
+      'INSERT INTO stamps ("twitchUserId","eventId") VALUES ($1,$2)',
+      [userId, event.id])
 
-      pool.query(
-        'SELECT id, uuid FROM events WHERE status = $1',
-        ["active"])
-        .then(results => {
-          if (results.rows.length == 0) { throw {status: 404, message: "no active events"} }
-          if (results.rows.length > 1) { throw {status: 500, message: "multiple active events"} }
-          return results.rows[0]
-        })
-        .then(createStamp)
-        .then(result => res.sendStatus(200))
-        .catch(err => res.status(err.status || 500).send(err.message))
-    })
+    pool.query(
+      'SELECT id, uuid FROM events WHERE status = $1',
+      ["active"])
+      .then(results => {
+        if (results.rows.length == 0) { throw {status: 404, message: "no active events"} }
+        if (results.rows.length > 1) { throw {status: 500, message: "multiple active events"} }
+        return results.rows[0]
+      })
+      .then(createStamp)
+      .then(result => res.sendStatus(200))
+      .catch(err => res.status(err.status || 500).send(err.message))
   })
 
   function ensureAuthenticated(req, res, next) {

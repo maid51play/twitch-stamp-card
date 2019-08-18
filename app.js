@@ -7,10 +7,12 @@ var passport = require('passport');
 var config = require('./oauth.js');
 var TwitchStrategy = require('passport-twitch-new').Strategy;
 var session = require('express-session')
+var fetch = require('node-fetch')
 
 var indexRouter = require('./routes/index')(app, passport);
 var authRouter = require('./routes/auth')(app, passport);
 var usersRouter = require('./routes/users');
+var hooksRouter = require('./routes/hooks');
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
@@ -52,6 +54,7 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/hooks', hooksRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -70,3 +73,12 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+// start listening for events
+fetch(`${config.host}/hooks/i-want-to-connect`, {
+        method: 'post',
+        headers: { 
+          'Content-Type': 'application/json',
+          'auth': config.adminAuth
+        },
+    })

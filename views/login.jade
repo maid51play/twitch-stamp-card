@@ -1,0 +1,10 @@
+include ./sign.jade
+extends layout
+
+block content
+  +sign()
+    p.big
+      span.cursive Okaerinasaimase!
+    p Please 
+      a(href="/auth/twitch") log in
+      |  to continue ♡

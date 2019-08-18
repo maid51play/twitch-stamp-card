@@ -1,21 +1,41 @@
 var config = require('../oauth.js');
+var pool = require('../queries.js');
 
 var express = require('express');
 var fetch = require('node-fetch')
 var router = express.Router();
 
 router.post('/streams', function(req, res, next) {
-  console.log('POST')
-  console.log(req.body.data);
-  res.sendStatus(200);
+  if(req.body.data.length > 0) {
+    pool.query(
+      'UPDATE events SET status = $1 WHERE status = $2',
+      ["archived", "active"])
+      .then(results => {
+        console.log('updated event with uuid: ', results.rows)
+      })
+      .then(results => {
+        pool.query('INSERT INTO events (title,game,status) VALUES ($1, $2, $3)', [req.body.data[0].title, req.body.data[0].game_id, "active"])
+        .then(results => {
+          console.log('created event with uuid: ', results.rows)
+          return res.status(200).json(results.rows)
+        })
+        .catch(err => {throw err})
+      })
+      .catch(err => {throw err})
+  } else {
+    pool.query(
+      'UPDATE events SET status = $1 WHERE status = $2',
+      ["archived", "active"])
+      .then(results => {
+        console.log('updated event with uuid: ', results.rows)
+        return res.status(200).json(results.rows)
+      })
+      .catch(err => {throw err})
+  }
 });
 
 router.get('/streams', function(req, res, next) {
-  console.log('GET')
-  console.log(req.query['hub.mode'])
-  console.log(req.query['hub.challenge']);
   // TODO: run fix or otherwise check the stream status and update accordingly here
-
   res.status(200).send(req.query['hub.challenge']);
 });
 

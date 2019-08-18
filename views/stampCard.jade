@@ -4,14 +4,17 @@ block content
   table
     tr
       caption 
-        span
-          span.cursive Name:
-          | 
-          span.cardName #{user}
-        span.completedCards
-          span.cursive Completed:
-          | 
-          span.cardName #{Math.floor(stamps / 20)}
+        p
+          span
+            span.cursive Name:
+            | 
+            span.cardName #{user}
+          span.completedCards
+            span.cursive Completed:
+            | 
+            span.cardName #{Math.floor(stamps / 20)}
+        if event
+          p Thank you for attending our stream #{event}. See you next time~ ♡
     each row in [0,1,2,3]
       tr
         each col in [0,1,2,3,4]

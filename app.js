@@ -85,10 +85,21 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 // start listening for events
+
 fetch(`${config.host}/hooks/i-want-to-connect`, {
+  method: 'post',
+  headers: { 
+    'Content-Type': 'application/json',
+    'auth': config.adminAuth
+  },
+})
+
+let requestConnection = () => fetch(`${config.host}/hooks/i-want-to-connect`, {
         method: 'post',
         headers: { 
           'Content-Type': 'application/json',
           'auth': config.adminAuth
         },
     })
+
+setInterval(requestConnection, 2074000000);

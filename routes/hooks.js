@@ -5,37 +5,14 @@ var express = require('express');
 var fetch = require('node-fetch')
 var router = express.Router();
 
-router.post('/streams', function(req, res, next) {
-  if(req.body.data.length > 0) {
-    pool.query(
-      'UPDATE events SET status = $1 WHERE status = $2',
-      ["archived", "active"])
-      .then(results => {
-        console.log('updated event with uuid: ', results.rows)
-      })
-      .then(results => {
-        pool.query('INSERT INTO events (title,game,status) VALUES ($1, $2, $3)', [req.body.data[0].title, req.body.data[0].game_id, "active"])
-        .then(results => {
-          console.log('created event with uuid: ', results.rows)
-          return res.status(200).json(results.rows)
-        })
-        .catch(err => {throw err})
-      })
-      .catch(err => {throw err})
-  } else {
-    pool.query(
-      'UPDATE events SET status = $1 WHERE status = $2',
-      ["archived", "active"])
-      .then(results => {
-        console.log('updated event with uuid: ', results.rows)
-        return res.status(200).json(results.rows)
-      })
-      .catch(err => {throw err})
-  }
+router.post('/streams', async function(req, res, next) {
+  let stream = req.body;
+  updateEventsService(stream, req)
+  .then(() => res.status(200).send('stream events refreshed!'))
+  .catch(err => res.status(500).send('something is wrong ; A;'))
 });
 
 router.get('/streams', function(req, res, next) {
-  // TODO: run fix or otherwise check the stream status and update accordingly here
   res.status(200).send(req.query['hub.challenge']);
 });
 
@@ -81,14 +58,61 @@ router.post('/so-sarazanmai', function(req, res, next) {
   }
 })
 
-// TODO
-// router.post('/fix', function(req, res, next) {
-  // check the stream status
-  // if it is up, check that the event title matches
-  //   if it doesn't, archive the current (if any) event and create a new one
-  // if it is down, archive the current event if there is one
+router.get('/fix', async function(req, res, next) {
+  let stream = await fetch(
+    `https://api.twitch.tv/helix/streams?user_id=${config.twitch.twitchId}`, {
+      method: 'get',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Client-ID': config.twitch.clientID
+      },
+    }).then(response => response.json())
 
-  // maybe this endpoint should get hit every hour after a stream starts, until the stream ends?
-// })
+  updateEventsService(stream, req)
+  .then(() => res.status(200).send('all fixed!'))
+  .catch(err => res.status(500).send('needs more healing ; A;'))
+})
+
+let updateEventsService = async (stream, req) => {
+  let streamId = stream.data[0] ? stream.data[0].id : undefined;
+
+  let activeEvents = await pool.query(
+    'SELECT * FROM events WHERE status = $1', ["active"]).then(results => results.rows)
+  let streamEvent = await pool.query(
+    'SELECT * FROM events WHERE "streamId" = $1', [streamId])
+  
+  let archivePromises = []
+  let archiveEvent = (id) => pool.query(
+    'UPDATE events SET status = $1 WHERE id = $2',
+    ["archived", id]
+  )
+
+  activeEvents.map(event => {
+    if(event.streamId != streamId) {
+      archivePromises.push(archiveEvent(event.id))
+    }
+  })
+
+  let createEvent = () => pool.query(
+    'INSERT INTO events ("title","status","streamId") VALUES ($1,$2,$3)',
+    [stream.data[0].title, "active", streamId]
+  )
+  let activateEvent = (id) => pool.query(
+    'UPDATE events SET status = $1 WHERE id = $2',
+    ["active", id]
+  )
+
+  Promise.all(archivePromises).then(() => {
+    if(streamEvent.rows[0]) { 
+      if(streamEvent.rows[0].status == "active") { return; }
+      return activateEvent(streamEvent.rows[0].id);
+    }
+    if(streamId) {
+      createEvent();
+    }
+  })
+}
+
+
 
 module.exports = router;

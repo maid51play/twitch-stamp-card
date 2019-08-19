@@ -20,18 +20,9 @@ module.exports = function(app, passport) {
 
   router.get('/stamps', ensureAuthenticated, function(req, res, next) {
     userId = twitchIdFromNightBot(req.headers['nightbot-user']);
+    url = `${config.host}/${userId}.png`
 
-    pool.query(
-      `SELECT COUNT( * ) FROM stamps WHERE "twitchUserId" = $1`
-    , [userId])
-    .then(results => results.rows[0].count)
-    .then(stamps => {
-      // TODO generate a stamp card image here
-      url = stamps;
-
-      return url;
-    })
-    .then(url => res.send(200, url))
+    res.status(200).send(`You can view your stamp card here: ${url}`);
   })
 
   router.get('/stamp-me-bb', ensureAuthenticated, function(req, res, next) {

@@ -1,6 +1,6 @@
 module.exports = function(app, passport) {
+  require('dotenv').config();
   var pool = require('../queries.js');
-  var config = require('../oauth.js');
   var express = require('express');
   var router = express.Router();
 
@@ -13,14 +13,14 @@ module.exports = function(app, passport) {
         if (results.rows.length > 1) { throw {status: 500, message: "multiple active events"} }
         return results.rows[0]
       })
-      .then(result => `${config.host}/event/${result.streamId}`)
+      .then(result => `${process.env.HOST}/event/${result.streamId}`)
       .then(url => res.status(200).send(url))
       .catch(err => res.status(err.status).send(err.message))
   })
 
   router.get('/stamps', ensureAuthenticated, function(req, res, next) {
     userId = twitchIdFromNightBot(req.headers['nightbot-user']);
-    url = `${config.host}/${userId}.png`
+    url = `${process.env.HOST}/${userId}.png`
 
     res.status(200).send(`You can view your stamp card here: ${url}`);
   })
@@ -51,7 +51,7 @@ module.exports = function(app, passport) {
   })
 
   function ensureAuthenticated(req, res, next) {
-    if (req.query.auth == config.nightBot.secret) { return next(); }
+    if (req.query.auth == process.env.NIGHTBOT_SECRET) { return next(); }
     res.status(401).send("You're not nightbot! You only play one on TV.")
   }
 

@@ -1,4 +1,4 @@
-var config = require('../oauth.js');
+require('dotenv').config();
 var pool = require('../queries.js');
 
 var express = require('express');
@@ -17,19 +17,19 @@ router.get('/streams', function(req, res, next) {
 });
 
 router.post('/i-want-to-connect', function(req, res, next) {
-  if (req.headers.auth == config.adminAuth) {
+  if (req.headers.auth == process.env.ADMIN_AUTH) {
     fetch('https://api.twitch.tv/helix/webhooks/hub', {
       method: 'post',
       body: JSON.stringify({
-          'hub.callback': `${config.host}/hooks/streams`,
+          'hub.callback': `${process.env.HOST}/hooks/streams`,
           'hub.mode': 'subscribe',
-          'hub.topic': `https://api.twitch.tv/helix/streams?user_id=${config.twitch.twitchId}`,
-          'hub.secret': config.twitch.hookSecret,
-          'hub.lease_seconds': config.twitch.lease_seconds,
+          'hub.topic': `https://api.twitch.tv/helix/streams?user_id=${process.env.TWITCH_ID}`,
+          'hub.secret': process.env.HOOK_SECRET,
+          'hub.lease_seconds': process.env.LEASE_SECONDS,
       }),
       headers: { 
         'Content-Type': 'application/json',
-        'Client-ID': config.twitch.clientID
+        'Client-ID': process.env.TWITCH_CLIENT_ID
       },
     }).then(() => res.sendStatus(200))
   } else {
@@ -38,19 +38,19 @@ router.post('/i-want-to-connect', function(req, res, next) {
 })
 
 router.post('/so-sarazanmai', function(req, res, next) {
-  if (req.headers.auth == config.adminAuth) {
+  if (req.headers.auth == process.env.ADMIN_AUTH) {
     fetch('https://api.twitch.tv/helix/webhooks/hub', {
       method: 'post',
       body: JSON.stringify({
-          'hub.callback': `${config.host}/hooks/streams`,
+          'hub.callback': `${process.env.HOST}/hooks/streams`,
           'hub.mode': 'unsubscribe',
-          'hub.topic': `https://api.twitch.tv/helix/streams?user_id=${config.twitch.twitchId}`,
-          'hub.secret': config.twitch.hookSecret,
-          'hub.lease_seconds': config.twitch.lease_seconds,
+          'hub.topic': `https://api.twitch.tv/helix/streams?user_id=${process.env.TWITCH_ID}`,
+          'hub.secret': process.env.HOOK_SECRET,
+          'hub.lease_seconds': process.env.LEASE_SECONDS,
       }),
       headers: { 
         'Content-Type': 'application/json',
-        'Client-ID': config.twitch.clientID
+        'Client-ID': process.env.TWITCH_CLIENT_ID
       },
     }).then(() => res.sendStatus(200))
   } else {
@@ -59,21 +59,27 @@ router.post('/so-sarazanmai', function(req, res, next) {
 })
 
 router.get('/fix', async function(req, res, next) {
+  console.log(process.env.TWITCH_CLIENT_ID)
   let stream = await fetch(
-    `https://api.twitch.tv/helix/streams?user_id=${config.twitch.twitchId}`, {
+    `https://api.twitch.tv/helix/streams?user_id=${process.env.TWITCH_ID}`, {
       method: 'get',
       headers: { 
         'Content-Type': 'application/json',
-        'Client-ID': config.twitch.clientID
+        'Client-ID': process.env.TWITCH_CLIENT_ID
       },
     }).then(response => response.json())
 
   updateEventsService(stream, req)
   .then(() => res.status(200).send('all fixed!'))
-  .catch(err => res.status(500).send('needs more healing ; A;'))
+  .catch(err => {
+    console.log(err)
+    res.status(500).send('needs more healing ; A;')
+  })
 })
 
 let updateEventsService = async (stream, req) => {
+  console.log(stream)
+  console.log(stream.data)
   let streamId = stream.data[0] ? stream.data[0].id : undefined;
 
   let activeEvents = await pool.query(

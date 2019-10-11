@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var passport = require('passport');
-var config = require('./oauth.js');
 var TwitchStrategy = require('passport-twitch-new').Strategy;
 var session = require('express-session')
 var fetch = require('node-fetch')
@@ -27,9 +26,9 @@ passport.deserializeUser(function(obj, done) {
 
 // config passport
 passport.use(new TwitchStrategy({
-  clientID: config.twitch.clientID,
-  clientSecret: config.twitch.clientSecret,
-  callbackURL: config.twitch.callbackURL
+  clientID: process.env.TWITCH_CLIENT_ID, 
+  clientSecret: process.env.TWITCH_CLIENT_SECRET,
+  callbackURL: process.env.TWITCH_CALLBACK_URL
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -56,7 +55,7 @@ app.use(
   })
 )
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: config.sessionSecret }));
+app.use(session({ secret: process.env.SESSION_SECRET }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -86,19 +85,19 @@ module.exports = app;
 
 // start listening for events
 
-fetch(`${config.host}/hooks/i-want-to-connect`, {
+fetch(`${process.env.HOST}/hooks/i-want-to-connect`, {
   method: 'post',
   headers: { 
     'Content-Type': 'application/json',
-    'auth': config.adminAuth
+    'auth': process.env.ADMIN_AUTH
   },
 })
 
-let requestConnection = () => fetch(`${config.host}/hooks/i-want-to-connect`, {
+let requestConnection = () => fetch(`${process.env.HOST}/hooks/i-want-to-connect`, {
         method: 'post',
         headers: { 
           'Content-Type': 'application/json',
-          'auth': config.adminAuth
+          'auth': process.env.ADMIN_AUTH
         },
     })
 

@@ -53,7 +53,7 @@ module.exports = function(app, passport) {
 
   function ensureTwitch(req, res, next) {
     if(providerFromNightBot(req.headers['nightbot-user']) == "twitch") { return next(); }
-    res.status(200).send("")
+    res.status(200).send("Stamp cards are only available on twitch!")
   }
 
   function ensureAuthenticated(req, res, next) {

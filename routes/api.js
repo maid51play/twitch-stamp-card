@@ -53,7 +53,7 @@ module.exports = function(app, passport) {
 
   function ensureTwitch(req, res, next) {
     if(providerFromNightBot(req.headers['nightbot-user']) == "twitch") { return next(); }
-    res.status(401).send("You're not twitch! You only play one on TV.")
+    res.status(200).send("")
   }
 
   function ensureAuthenticated(req, res, next) {

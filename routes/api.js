@@ -46,6 +46,7 @@ module.exports = function(app, passport) {
         if (err.message == 'duplicate key value violates unique constraint "unique stamps"') {
           err.message = "You can only stamp once per stream!"
         }
+        console.log(err)
         return res.status(200).send(err.message)
       })
   })

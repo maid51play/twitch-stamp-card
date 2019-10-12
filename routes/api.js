@@ -18,14 +18,14 @@ module.exports = function(app, passport) {
       .catch(err => res.status(err.status).send(err.message))
   })
 
-  router.get('/stamps', ensureAuthenticated, function(req, res, next) {
+  router.get('/stamps', ensureAuthenticated, ensureTwitch, function(req, res, next) {
     userId = twitchIdFromNightBot(req.headers['nightbot-user']);
     url = `${process.env.HOST}/${userId}.png`
 
     res.status(200).send(`You can view your stamp card here: ${url}`);
   })
 
-  router.get('/stamp-me-bb', ensureAuthenticated, function(req, res, next) {
+  router.get('/stamp-me-bb', ensureAuthenticated, ensureTwitch, function(req, res, next) {
     userId = twitchIdFromNightBot(req.headers['nightbot-user']);
 
     var createStamp = event => pool.query(
@@ -50,6 +50,14 @@ module.exports = function(app, passport) {
       })
   })
 
+  function ensureTwitch(req, res, next) {
+    if(providerFromNightBot(req.headers['nightbot-channel']) != "twitch") {
+      return res.status(200).send("")
+    }
+
+    return router;
+  }
+
   function ensureAuthenticated(req, res, next) {
     if (req.query.auth == process.env.NIGHTBOT_SECRET) { return next(); }
     res.status(401).send("You're not nightbot! You only play one on TV.")
@@ -58,4 +66,5 @@ module.exports = function(app, passport) {
   return router;
 }
 
+let providerFromNightBot = (nightbotChannel) => nightbotChannel.split("&")[2].split("=")[1]
 let twitchIdFromNightBot = (nightbotUser) => nightbotUser.split("&")[3].split("=")[1]

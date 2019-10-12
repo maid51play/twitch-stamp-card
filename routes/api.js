@@ -52,7 +52,7 @@ module.exports = function(app, passport) {
   })
 
   function ensureTwitch(req, res, next) {
-    if(providerFromNightBot(req.headers['nightbot-channel']) == "twitch") { return next(); }
+    if(providerFromNightBot(req.headers['nightbot-user']) == "twitch") { return next(); }
     res.status(401).send("You're not twitch! You only play one on TV.")
   }
 
@@ -64,5 +64,5 @@ module.exports = function(app, passport) {
   return router;
 }
 
-let providerFromNightBot = (nightbotChannel) => nightbotChannel.split("&")[2].split("=")[1]
+let providerFromNightBot = (nightbotUser) => nightbotUser.split("&")[2].split("=")[1]
 let twitchIdFromNightBot = (nightbotUser) => nightbotUser.split("&")[3].split("=")[1]

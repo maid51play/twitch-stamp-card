@@ -1,9 +1,9 @@
-module.exports = function(app, passport) {
-  require('dotenv').config();
-  var pool = require('../queries.js');
-  var express = require('express');
-  var router = express.Router();
+require('dotenv').config();
+var pool = require('../queries.js');
+var express = require('express');
+var router = express.Router();
 
+module.exports = function(app, passport) {
   router.get('/events', ensureAuthenticated, function(req, res, next) {
     pool.query(
       'SELECT streamId FROM events WHERE status = $1',

@@ -20,13 +20,16 @@ module.exports = function(app, passport) {
 
   router.get('/stamps', ensureAuthenticated, ensureTwitch, function(req, res, next) {
     userId = twitchIdFromNightBot(req.headers['nightbot-user']);
+    userName = twitchNameFromNightBot(req.headers['nightbot-user']);
+
     url = `${process.env.HOST}/${userId}.png`
 
-    res.status(200).send(`You can view your stamp card here: ${url}`);
+    res.status(200).send(`@${userName} You can view your stamp card here: ${url}`);
   })
 
   router.get('/stamp-me-bb', ensureAuthenticated, ensureTwitch, function(req, res, next) {
     userId = twitchIdFromNightBot(req.headers['nightbot-user']);
+    userName = twitchNameFromNightBot(req.headers['nightbot-user']);
 
     var createStamp = event => pool.query(
       'INSERT INTO stamps ("twitchUserId","eventId") VALUES ($1,$2)',
@@ -41,7 +44,7 @@ module.exports = function(app, passport) {
         return results.rows[0]
       })
       .then(createStamp)
-      .then(result => res.status(200).send("ありがとうございます！ Thank you for your continued support ♡ !stampcard to see your stamp card progress~"))
+      .then(result => res.status(200).send(`@${userName} ありがとうございます！ Thank you for your continued support ♡ !stampcard to see your stamp card progress~`))
       .catch(err => {
         if (err.message == 'duplicate key value violates unique constraint "unique stamps"') {
           err.message = "You can only stamp once per stream!"
@@ -66,3 +69,4 @@ module.exports = function(app, passport) {
 
 let providerFromNightBot = (nightbotUser) => nightbotUser.split("&")[2].split("=")[1]
 let twitchIdFromNightBot = (nightbotUser) => nightbotUser.split("&")[3].split("=")[1]
+let twitchNameFromNightBot = (nightbotUser) => nightbotUser.split("&")[1].split("=")[1]

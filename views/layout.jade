@@ -4,17 +4,14 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    div(class='header--border')
-      div(class='header--content')
-        if user
-          p Okaeri, #{user}!
-          p
-            a(href="/") My stamp card
-          p
-            a(href="/auth/logout") Logout
-        else
-          p
-            a(href="/auth/twitch") Login via Twitch
+    if user
+      p Okaeri, #{user}!
+      p
+        a(href="/") My stamp card
+      p
+        a(href="/auth/logout") Logout
+    else
+      p
+        //- a(href="/auth/twitch") Login via Twitch
     div(class='content')
       block content
-    div(class='footer--border')

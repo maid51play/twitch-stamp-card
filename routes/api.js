@@ -20,7 +20,7 @@ module.exports = function(app, passport) {
       .catch(err => res.status(err.status).send(err.message))
   })
 
-  router.get('/stamps', ensureAuthenticated, ensureAdmin, ensureTwitch, function(req, res, next) {
+  router.get('/stamps', ensureAuthenticated, ensureTwitch, function(req, res, next) {
     userId = twitchIdFromNightBot(req.headers['nightbot-user']);
     userName = twitchNameFromNightBot(req.headers['nightbot-user']);
 
@@ -58,45 +58,45 @@ module.exports = function(app, passport) {
 
 
   router.get('/lotto', ensureAuthenticated, ensureDiscord, ensureAdmin, async function(req, res, next) {
-    // fullStampCards = await pool.query(
-    //   `SELECT "twitchUserId" FROM stamps WHERE archived = $1 GROUP BY "twitchUserId" HAVING COUNT(*) >= 15`
-    // , [false])
+    fullStampCards = await pool.query(
+      `SELECT "twitchUserId" FROM stamps WHERE archived = $1 GROUP BY "twitchUserId" HAVING COUNT(*) >= 15`
+    , [false])
 
-    // const entryPromises = await fullStampCards.rows.map(async row => {
-    //   const twitchId = row.twitchUserId;
-    //   const twitchDisplayNameResponse = await fetch(`https://api.twitch.tv/helix/users?id=${twitchId}`, {
-    //     headers: { 
-    //       'Content-Type': 'application/json',
-    //       'Client-ID': process.env.TWITCH_CLIENT_ID
-    //     },
-    //   })
-    //   const twitchDisplayName = await twitchDisplayNameResponse.json();
-    //   return {id: twitchId, displayName: twitchDisplayName.data[0].display_name}
-    // });
-    // const entries = await Promise.all(entryPromises)
+    const entryPromises = await fullStampCards.rows.map(async row => {
+      const twitchId = row.twitchUserId;
+      const twitchDisplayNameResponse = await fetch(`https://api.twitch.tv/helix/users?id=${twitchId}`, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Client-ID': process.env.TWITCH_CLIENT_ID
+        },
+      })
+      const twitchDisplayName = await twitchDisplayNameResponse.json();
+      return {id: twitchId, displayName: twitchDisplayName.data[0].display_name}
+    });
+    const entries = await Promise.all(entryPromises)
 
-    // if(entries.length < 1) {
-    //   return res.status(200).send("Boohoo no participants ; A;")
-    // }
+    if(entries.length < 1) {
+      return res.status(200).send("Boohoo no participants ; A;")
+    }
 
-    // const winner = entries[Math.floor(Math.random() * entries.length)]
+    const winner = entries[Math.floor(Math.random() * entries.length)]
 
-    // const winnersText = entries.reduce((acc, entry) => acc + `\n ${entry.displayName}`, `WINNER: ${winner.displayName}\n`)
+    const winnersText = entries.reduce((acc, entry) => acc + `\n ${entry.displayName}`, `WINNER: ${winner.displayName}\n`)
 
 
-    // // send the winner and participant data somewhere
-    // fs.writeFile('public/winners.txt', winnersText, async (err) => {
-    //   // throws an error, you could also catch it here
-    //   if (err) throw err;
+    // send the winner and participant data somewhere
+    fs.writeFile('public/winners.txt', winnersText, async (err) => {
+      // throws an error, you could also catch it here
+      if (err) throw err;
   
-    //   // success case, the file was saved
-    //   const entriesQuery = entries.reduce((acc, entry) => acc + "" + entry.id + ", ", "(").slice(0,-2).concat(")")
-    //   await pool.query(
-    //     `UPDATE stamps SET archived = $1 WHERE "twitchUserId" IN ${entriesQuery}`
-    //   , [true])
+      // success case, the file was saved
+      const entriesQuery = entries.reduce((acc, entry) => acc + "" + entry.id + ", ", "(").slice(0,-2).concat(")")
+      // await pool.query(
+      //   `UPDATE stamps SET archived = $1 WHERE "twitchUserId" IN ${entriesQuery}`
+      // , [true])
 
-    //   res.status(200).send(`View winners at ${process.env.HOST}/winners.txt`)
-    // });
+      res.status(200).send(`View winners at ${process.env.HOST}/winners.txt`)
+    });
 
     res.status(200).send("foo")
     

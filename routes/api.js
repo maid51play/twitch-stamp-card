@@ -2,6 +2,8 @@ require('dotenv').config();
 var pool = require('../queries.js');
 var express = require('express');
 var router = express.Router();
+var fetch = require('node-fetch');
+const fs = require('fs');
 
 module.exports = function(app, passport) {
   router.get('/events', ensureAuthenticated, function(req, res, next) {
@@ -54,9 +56,67 @@ module.exports = function(app, passport) {
       })
   })
 
+
+  router.get('/lotto', ensureAuthenticated, ensureDiscord, ensureAdmin, async function(req, res, next) {
+    // fullStampCards = await pool.query(
+    //   `SELECT "twitchUserId" FROM stamps WHERE archived = $1 GROUP BY "twitchUserId" HAVING COUNT(*) >= 15`
+    // , [false])
+
+    // const entryPromises = await fullStampCards.rows.map(async row => {
+    //   const twitchId = row.twitchUserId;
+    //   const twitchDisplayNameResponse = await fetch(`https://api.twitch.tv/helix/users?id=${twitchId}`, {
+    //     headers: { 
+    //       'Content-Type': 'application/json',
+    //       'Client-ID': process.env.TWITCH_CLIENT_ID
+    //     },
+    //   })
+    //   const twitchDisplayName = await twitchDisplayNameResponse.json();
+    //   return {id: twitchId, displayName: twitchDisplayName.data[0].display_name}
+    // });
+    // const entries = await Promise.all(entryPromises)
+
+    // if(entries.length < 1) {
+    //   return res.status(200).send("Boohoo no participants ; A;")
+    // }
+
+    // const winner = entries[Math.floor(Math.random() * entries.length)]
+
+    // const winnersText = entries.reduce((acc, entry) => acc + `\n ${entry.displayName}`, `WINNER: ${winner.displayName}\n`)
+
+
+    // // send the winner and participant data somewhere
+    // fs.writeFile('public/winners.txt', winnersText, async (err) => {
+    //   // throws an error, you could also catch it here
+    //   if (err) throw err;
+  
+    //   // success case, the file was saved
+    //   const entriesQuery = entries.reduce((acc, entry) => acc + "" + entry.id + ", ", "(").slice(0,-2).concat(")")
+    //   await pool.query(
+    //     `UPDATE stamps SET archived = $1 WHERE "twitchUserId" IN ${entriesQuery}`
+    //   , [true])
+
+    //   res.status(200).send(`View winners at ${process.env.HOST}/winners.txt`)
+    // });
+
+    res.status(200).send("foo")
+    
+    
+  })
+
   function ensureTwitch(req, res, next) {
     if(providerFromNightBot(req.headers['nightbot-user']) == "twitch") { return next(); }
     res.status(200).send("Stamp cards are only available on twitch!")
+  }
+
+  function ensureDiscord(req, res, next) {
+    if(providerFromNightBot(req.headers['nightbot-user']) == "discord") { return next(); }
+    res.status(200).send("...")
+  }
+
+  function ensureAdmin(req, res, next) {
+    console.log(req.headers['nightbot-user'])
+    if(userLevelFromNightBot(req.headers['nightbot-user']) == "moderator") { return next(); }
+    res.status(200).send("...")
   }
 
   function ensureAuthenticated(req, res, next) {
@@ -68,5 +128,6 @@ module.exports = function(app, passport) {
 }
 
 let providerFromNightBot = (nightbotUser) => nightbotUser.split("&")[2].split("=")[1]
+let userLevelFromNightBot = (nightbotUser) => nightbotUser.split("&")[4].split("=")[1]
 let twitchIdFromNightBot = (nightbotUser) => nightbotUser.split("&")[3].split("=")[1]
 let twitchNameFromNightBot = (nightbotUser) => nightbotUser.split("&")[1].split("=")[1]

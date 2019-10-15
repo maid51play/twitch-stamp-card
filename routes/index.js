@@ -32,8 +32,8 @@ module.exports = function(app, passport) {
   router.get('/:id.png', async function(req, res, next) {
 
     stampResults = await pool.query(
-      `SELECT COUNT( * ) FROM stamps WHERE "twitchUserId" = $1`
-    , [req.params.id])
+      `SELECT COUNT( * ) FROM stamps WHERE "twitchUserId" = $1 AND "archived" = $2`
+    , [req.params.id, false])
 
     stamps = stampResults.rows[0].count;
 

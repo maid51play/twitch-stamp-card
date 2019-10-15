@@ -110,14 +110,12 @@ module.exports = function(app, passport) {
 
   function ensureDiscord(req, res, next) {
     if(providerFromNightBot(req.headers['nightbot-user']) == "discord") { return next(); }
-    res.status(200).send("...")
+    res.status(200).send("This command is not available on twitch")
   }
 
   function ensureAdmin(req, res, next) {
-    console.log(req.headers['nightbot-user'])
-    // if(userLevelFromNightBot(req.headers['nightbot-user']) == "moderator") { return next(); }
-    // res.status(200).send("...")
-    return next()
+    if(userLevelFromNightBot(req.headers['nightbot-user']) == "moderator") { return next(); }
+    res.status(200).send("I'm sorry goshujinsama I can't do that")
   }
 
   function ensureAuthenticated(req, res, next) {

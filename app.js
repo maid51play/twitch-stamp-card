@@ -100,5 +100,5 @@ let requestConnection = () => fetch(`${process.env.HOST}/hooks/i-want-to-connect
           'auth': process.env.ADMIN_AUTH
         },
     })
-
+console.log(((process.env.LEASE_SECONDS, 10) * 1000) - 6000)
 setInterval(requestConnection, parseInt((process.env.LEASE_SECONDS, 10) * 1000) - 6000);

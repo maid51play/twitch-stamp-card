@@ -101,4 +101,4 @@ let requestConnection = () => fetch(`${process.env.HOST}/hooks/i-want-to-connect
         },
     })
 console.log("milliseconds", (process.env.LEASE_SECONDS * 1000) - 6000)
-setInterval(requestConnection, 1140000);
+// setInterval(requestConnection, 1140000);

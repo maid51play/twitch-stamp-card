@@ -20,7 +20,7 @@ module.exports = function(app, passport) {
       .catch(err => res.status(err.status).send(err.message))
   })
 
-  router.get('/stamps', ensureAuthenticated, ensureTwitch, function(req, res, next) {
+  router.get('/stamps', ensureAuthenticated, ensureAdmin, ensureTwitch, function(req, res, next) {
     userId = twitchIdFromNightBot(req.headers['nightbot-user']);
     userName = twitchNameFromNightBot(req.headers['nightbot-user']);
 
@@ -115,8 +115,9 @@ module.exports = function(app, passport) {
 
   function ensureAdmin(req, res, next) {
     console.log(req.headers['nightbot-user'])
-    if(userLevelFromNightBot(req.headers['nightbot-user']) == "moderator") { return next(); }
-    res.status(200).send("...")
+    // if(userLevelFromNightBot(req.headers['nightbot-user']) == "moderator") { return next(); }
+    // res.status(200).send("...")
+    return next()
   }
 
   function ensureAuthenticated(req, res, next) {

@@ -85,20 +85,20 @@ module.exports = app;
 
 // start listening for events
 
-fetch(`${process.env.HOST}/hooks/i-want-to-connect`, {
-  method: 'post',
-  headers: { 
-    'Content-Type': 'application/json',
-    'auth': process.env.ADMIN_AUTH
-  },
-})
+// fetch(`${process.env.HOST}/hooks/i-want-to-connect`, {
+//   method: 'post',
+//   headers: { 
+//     'Content-Type': 'application/json',
+//     'auth': process.env.ADMIN_AUTH
+//   },
+// })
 
-let requestConnection = () => fetch(`${process.env.HOST}/hooks/i-want-to-connect`, {
-        method: 'post',
-        headers: { 
-          'Content-Type': 'application/json',
-          'auth': process.env.ADMIN_AUTH
-        },
-    })
-console.log((process.env.LEASE_SECONDS * 1000) - 6000)
-setInterval(requestConnection, (process.env.LEASE_SECONDS, 10 * 1000) - 6000);
+// let requestConnection = () => fetch(`${process.env.HOST}/hooks/i-want-to-connect`, {
+//         method: 'post',
+//         headers: { 
+//           'Content-Type': 'application/json',
+//           'auth': process.env.ADMIN_AUTH
+//         },
+//     })
+// console.log((process.env.LEASE_SECONDS * 1000) - 6000)
+// setInterval(requestConnection, (process.env.LEASE_SECONDS, 10 * 1000) - 6000);

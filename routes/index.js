@@ -32,21 +32,26 @@ module.exports = function(app, passport) {
   router.get('/:id.png', async function(req, res, next) {
 
     stampResults = await pool.query(
-      `SELECT COUNT( * ) FROM stamps WHERE "twitchUserId" = $1 AND "archived" = $2`
+      `SELECT "eventId" FROM stamps WHERE "twitchUserId" = $1 AND "archived" = $2 ORDER BY "createdAt" ASC`
     , [req.params.id, false])
 
-    stamps = stampResults.rows[0].count;
+    stamps = stampResults.rows;
 
     const canvas = createCanvas(800, 500);
     const ctx = canvas.getContext('2d');
     
     const background = await loadImage('public/images/stampcard.png');
     const stamp = await loadImage('public/images/stamp.png');
+    const halloween2020stamp = await loadImage('public/images/halloweenstamp.png');
     ctx.drawImage(background,0,0,800,500);
 
-    for(i=0;i<stamps;i++) {
+    for(i=0;i<stamps.length;i++) {
       const [x,y] = getStampCoordinates(i)
-      ctx.drawImage(stamp,x-55,y-55,110,110)
+      if(stamps[i].eventId == "16" || stamps[i].eventId == "15") {
+        ctx.drawImage(halloween2020stamp,x-55,y-55,110,110)
+      } else {
+        ctx.drawImage(stamp,x-55,y-55,110,110)
+      }
     }
 
     const stream = canvas.createPNGStream();

@@ -21,6 +21,7 @@
     "node-pg-migrate": "^3.21.1",
     "passport": "^0.4.0",
     "passport-twitch-new": "0.0.1",
-    "pg": "^7.12.1"
+    "pg": "^7.12.1",
+    "random-js": "^2.1.0"
   }
 }

@@ -59,7 +59,7 @@ module.exports = function(app, passport) {
 
   router.get('/lotto', ensureAuthenticated, ensureDiscord, ensureAdmin, async function(req, res, next) {
     fullStampCards = await pool.query(
-      `SELECT "twitchUserId" FROM stamps WHERE archived = $1 GROUP BY "twitchUserId" HAVING COUNT(*) >= 15`
+      `SELECT "twitchUserId" FROM stamps WHERE archived = $1 GROUP BY "twitchUserId" HAVING COUNT(*) >= 12`
     , [false])
 
     const entryPromises = await fullStampCards.rows.map(async row => {

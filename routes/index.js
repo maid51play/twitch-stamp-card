@@ -13,10 +13,10 @@ module.exports = function(app, passport) {
 
   const getStampCoordinates = (index) => {
     const rows = 3;
-    const columns = 5;
-    const x1 = 60;
+    const columns = 4;
+    const x1 = 160;
     const y1 = 110;
-    const x2 = 740;
+    const x2 = 675;
     const y2 = 390;
     const rowHeight = (y2 - y1) / (rows - 1);
     const columnWidth = (x2 - x1) / (columns - 1);

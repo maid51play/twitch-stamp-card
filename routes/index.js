@@ -32,7 +32,7 @@ module.exports = function(app, passport) {
   router.get('/:id.png', async function(req, res, next) {
 
     stampResults = await pool.query(
-      `SELECT "eventId" FROM stamps WHERE "twitchUserId" = $1 AND "archived" = $2 ORDER BY "createdAt" ASC`
+      `SELECT "eventId" FROM stamps WHERE "twitchUserId" = $1 AND "archived" = $2 ORDER BY "createdAt" ASC LIMIT 12`
     , [req.params.id, false])
 
     stamps = stampResults.rows;

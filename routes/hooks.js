@@ -40,7 +40,7 @@ router.post('/i-want-to-connect', async function(req, res, next) {
   }
 })
 
-router.post('/so-sarazanmai', function(req, res, next) {
+router.post('/so-sarazanmai', async function(req, res, next) {
   if (req.headers.auth == process.env.ADMIN_AUTH) {
     oauthToken = await getOauth();
 

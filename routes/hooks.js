@@ -16,8 +16,10 @@ router.get('/streams', function(req, res, next) {
   res.status(200).send(req.query['hub.challenge']);
 });
 
-router.post('/i-want-to-connect', function(req, res, next) {
+router.post('/i-want-to-connect', async function(req, res, next) {
   if (req.headers.auth == process.env.ADMIN_AUTH) {
+    oauthToken = await getOauth();
+    
     fetch('https://api.twitch.tv/helix/webhooks/hub', {
       method: 'post',
       body: JSON.stringify({
@@ -29,7 +31,8 @@ router.post('/i-want-to-connect', function(req, res, next) {
       }),
       headers: { 
         'Content-Type': 'application/json',
-        'Client-ID': process.env.TWITCH_CLIENT_ID
+        'Client-ID': process.env.TWITCH_CLIENT_ID,
+        'Authorization': `Bearer ${oauthToken.access_token}`
       },
     }).then(() => res.sendStatus(200))
   } else {
@@ -39,6 +42,8 @@ router.post('/i-want-to-connect', function(req, res, next) {
 
 router.post('/so-sarazanmai', function(req, res, next) {
   if (req.headers.auth == process.env.ADMIN_AUTH) {
+    oauthToken = await getOauth();
+
     fetch('https://api.twitch.tv/helix/webhooks/hub', {
       method: 'post',
       body: JSON.stringify({
@@ -50,7 +55,8 @@ router.post('/so-sarazanmai', function(req, res, next) {
       }),
       headers: { 
         'Content-Type': 'application/json',
-        'Client-ID': process.env.TWITCH_CLIENT_ID
+        'Client-ID': process.env.TWITCH_CLIENT_ID,
+        'Authorization': `Bearer ${oauthToken.access_token}`
       },
     }).then(() => res.sendStatus(200))
   } else {
@@ -60,12 +66,15 @@ router.post('/so-sarazanmai', function(req, res, next) {
 
 router.get('/fix', async function(req, res, next) {
   console.log(process.env.TWITCH_CLIENT_ID)
+  oauthToken = await getOauth();
+
   let stream = await fetch(
     `https://api.twitch.tv/helix/streams?user_id=${process.env.TWITCH_ID}`, {
       method: 'get',
       headers: { 
         'Content-Type': 'application/json',
-        'Client-ID': process.env.TWITCH_CLIENT_ID
+        'Client-ID': process.env.TWITCH_CLIENT_ID,
+        'Authorization': `Bearer ${oauthToken.access_token}`
       },
     }).then(response => response.json())
 
@@ -119,6 +128,12 @@ let updateEventsService = async (stream, req) => {
   })
 }
 
+let getOauth = () => {
+  return fetch(`https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`, {
+    method: 'post'
+  }).then((response) => response.json())
+  .then((data) => data)
+}
 
 
 module.exports = router;

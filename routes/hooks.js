@@ -64,6 +64,30 @@ router.post('/so-sarazanmai', async function(req, res, next) {
   }
 })
 
+let requestConnection = () => fetch(`${process.env.HOST}/hooks/i-want-to-connect`, {
+  method: 'post',
+  headers: { 
+    'Content-Type': 'application/json',
+    'auth': process.env.ADMIN_AUTH
+  },
+})
+
+let refreshConnection = () => {
+  console.log('REFRESHING CONNECTION')
+  let activeEvents = await pool.query(
+    'SELECT * FROM events WHERE status = $1', ["active"]).then(results => results.rows)
+  if(activeEvents.length <= 0) {
+    clearInterval(waitingForStreamEnd);
+  }
+}
+let waitingForStreamEnd;
+router.get('/okite', async function(req, res, next) {
+  requestConnection();
+  const milliseconds = (process.env.LEASE_SECONDS * 1000) - 60000
+  waitingForStreamEnd = setInterval(refreshConnection, milliseconds);
+  res.status(200).send('おはようございますヾ(￣0￣ )ノ')
+})
+
 router.get('/fix', async function(req, res, next) {
   console.log(process.env.TWITCH_CLIENT_ID)
   oauthToken = await getOauth();

@@ -78,6 +78,8 @@ let refreshConnection = () => {
     'SELECT * FROM events WHERE status = $1', ["active"]).then(results => results.rows)
   if(activeEvents.length <= 0) {
     clearInterval(waitingForStreamEnd);
+  } else {
+    requestConnection()
   }
 }
 let waitingForStreamEnd;

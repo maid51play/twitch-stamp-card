@@ -72,7 +72,7 @@ let requestConnection = () => fetch(`${process.env.HOST}/hooks/i-want-to-connect
   },
 })
 
-let refreshConnection = () => {
+let refreshConnection = async () => {
   console.log('REFRESHING CONNECTION')
   let activeEvents = await pool.query(
     'SELECT * FROM events WHERE status = $1', ["active"]).then(results => results.rows)

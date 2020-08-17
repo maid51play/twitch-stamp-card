@@ -84,9 +84,9 @@ let refreshConnection = async () => {
 }
 let waitingForStreamEnd;
 router.get('/okite', async function(req, res, next) {
-  requestConnection();
-  const milliseconds = (process.env.LEASE_SECONDS * 1000) - 60000
-  waitingForStreamEnd = setInterval(refreshConnection, milliseconds);
+  // requestConnection();
+  // const milliseconds = (process.env.LEASE_SECONDS * 1000) - 60000
+  // waitingForStreamEnd = setInterval(refreshConnection, milliseconds);
   res.status(200).send('おはようございますヾ(￣0￣ )ノ')
 })
 
